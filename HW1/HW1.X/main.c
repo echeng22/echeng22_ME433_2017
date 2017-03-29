@@ -26,15 +26,15 @@
 #pragma config FPLLIDIV = DIV_2 // divide input clock to be in range 4-5MHz
 #pragma config FPLLMUL = MUL_24 // multiply clock after FPLLIDIV
 #pragma config FPLLODIV = DIV_2 // divide clock after FPLLMUL to get 48MHz
-#pragma config UPLLIDIV = x // divider for the 8MHz input clock, then multiply by 12 to get 48MHz for USB
+#pragma config UPLLIDIV = DIV_2 // divider for the 8MHz input clock, then multiply by 12 to get 48MHz for USB
 #pragma config UPLLEN = ON // USB clock on
 
 // DEVCFG3
 #pragma config USERID = 0 // some 16bit userid, doesn't matter what
-#pragma config PMDL1WAY = x // allow multiple reconfigurations
-#pragma config IOL1WAY = x // allow multiple reconfigurations
-#pragma config FUSBIDIO = x // USB pins controlled by USB module
-#pragma config FVBUSONIO = x // USB BUSON controlled by USB module
+#pragma config PMDL1WAY = OFF // allow multiple reconfigurations
+#pragma config IOL1WAY = OFF // allow multiple reconfigurations
+#pragma config FUSBIDIO = ON // USB pins controlled by USB module
+#pragma config FVBUSONIO = ON // USB BUSON controlled by USB module
 
 
 int main() {
@@ -54,11 +54,24 @@ int main() {
     DDPCONbits.JTAGEN = 0;
 
     // do your TRIS and LAT commands here
-
+    TRISBbits.TRISB4 = 1;
+    TRISAbits.TRISA4 = 0;
+    LATAbits.LATA4 = 0;
+    
     __builtin_enable_interrupts();
 
     while(1) {
 	    // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
 		  // remember the core timer runs at half the CPU speed
+        _CP0_SET_COUNT(0);
+        while(_CP0_GET_COUNT() < 20000000)
+        {
+            while(!PORTBbits.RB4)
+            {
+                LATAbits.LATA4 = 0;
+            }
+        }
+        LATAINV = 0b10000;
+              
     }
 }
