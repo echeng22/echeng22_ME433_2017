@@ -64,7 +64,7 @@ int main() {
 	    // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
 		  // remember the core timer runs at half the CPU speed
         _CP0_SET_COUNT(0);
-        while(_CP0_GET_COUNT() < 20000000)
+        while(_CP0_GET_COUNT() < 12000)
         {
             while(!PORTBbits.RB4)
             {
