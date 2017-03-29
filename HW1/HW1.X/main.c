@@ -30,7 +30,7 @@
 #pragma config UPLLEN = ON // USB clock on
 
 // DEVCFG3
-#pragma config USERID = 0 // some 16bit userid, doesn't matter what
+#pragma config USERID = 0 // some 16bit userubmit the link to your repid, doesn't matter what
 #pragma config PMDL1WAY = OFF // allow multiple reconfigurations
 #pragma config IOL1WAY = OFF // allow multiple reconfigurations
 #pragma config FUSBIDIO = ON // USB pins controlled by USB module
@@ -64,7 +64,7 @@ int main() {
 	    // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
 		  // remember the core timer runs at half the CPU speed
         _CP0_SET_COUNT(0);
-        while(_CP0_GET_COUNT() < 12000)
+        while(_CP0_GET_COUNT() < 12000) //12000 is for square wave with period of .5 ms
         {
             while(!PORTBbits.RB4)
             {
