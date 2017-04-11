@@ -91,7 +91,6 @@ int main() {
         }
         setVoltage(0,sinWave[counter1]);
         setVoltage(1,triWave[counter2]);
-        _CP0_SET_COUNT(0);
         
         counter1++;
         counter2++;
