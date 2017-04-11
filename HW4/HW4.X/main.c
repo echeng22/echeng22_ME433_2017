@@ -1,6 +1,7 @@
-#include<xc.h>           // processor SFR definitions
-#include<sys/attribs.h>  // __ISR macro
-#include "spi_lib.c"
+#include <xc.h>           // processor SFR definitions
+#include <sys/attribs.h>  // __ISR macro
+#include "spi_lib.h"
+#include <math.h>
 
 // DEVCFG0
 #pragma config DEBUG = OFF // no debugging
@@ -37,6 +38,23 @@
 #pragma config FUSBIDIO = ON // USB pins controlled by USB module
 #pragma config FVBUSONIO = ON // USB BUSON controlled by USB module
 
+unsigned int sinWave[100];
+unsigned int triWave[100];
+
+void makeWaves()
+{
+    int i;
+    double sinTemp;
+    double triTemp;
+    for(i=0; i < 100; i++)
+    {
+        sinTemp = 255.0/2.0 + (255.0/2.0) * sin(2*3.14 * (i/100.0));
+        sinWave[i] = sinTemp;
+        triTemp = i*(255.0/100.0);
+        triWave[i] = triTemp;
+        
+    }
+}
 
 int main() {
 
@@ -55,13 +73,27 @@ int main() {
     DDPCONbits.JTAGEN = 0;
 
     // do your TRIS and LAT commands here
-    RPB7Rbits.RPB7R = 0b0011; //Set up Pin B7 to be SS1
-    RPB8Rbits.RPB8R = 0b0011; //Set up Pin B8 to be SDO1
-    SDI1Rbits.SDI1R = 0b0011; //Set up Pin B11 (Pin 22) to be SDI1
-    
-    __builtin_enable_interrupts();
 
+    initSPI1();
+    makeWaves();
+    __builtin_enable_interrupts();
+    int counter = 0;
     while(1) {
-	
+        _CP0_SET_COUNT(0);
+        while(_CP0_GET_COUNT() < 48000000/2/1000) //1kHz signal
+        {
+           ;
+        }
+        setVoltage(0,sinWave[counter]);
+        setVoltage(1,triWave[counter]);
+        _CP0_SET_COUNT(0);
+        
+        counter++;
+        if(counter == 100)
+        {
+            counter = 0;
+        }
+        
     }
 }
+
