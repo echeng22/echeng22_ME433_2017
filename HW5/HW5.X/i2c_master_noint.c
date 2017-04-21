@@ -6,22 +6,17 @@
 // Change I2C1 to the I2C channel you are using
 // I2C pins need pull-up resistors, 2k-10k
 
-#define SLAVE_ADDR 0x40
-
-void initExpander()
-{
-    
-}
+#define SLAVE_ADDR 0x20
 
 void i2c_master_setup(void) {
-     //Turn off analog function from Pin B2 and B3. B2 is pin 17, and B3 is pin 18
+    //Turn off analog function from Pin B2 and B3. B2 is pin 17, and B3 is pin 18
     ANSELBbits.ANSB2 = 0;
     ANSELBbits.ANSB3 = 0;
-    
+
     // I2CBRG = [1/(2*Fsck) - PGD]*Pblck - 2 
-    I2C2BRG = 233; 
-    
-    // look up PGD for your PIC32
+    I2C2BRG = 233;
+
+    //PGD is 104 ns
     I2C2CONbits.ON = 1; // turn on the I2C2 module
 }
 
@@ -73,4 +68,32 @@ void i2c_master_stop(void) { // send a STOP:
     while (I2C2CONbits.PEN) {
         ;
     } // wait for STOP to complete
+}
+
+void initExpander() {
+    //Set pins GP0-3 to output, GP4-7 to inputs
+    setExpander(0x00, 0xF0); //0x00 is register controlling which pins are input or outputs
+    //Turn on pull up resistor on pin GP7
+    //    setExpander(0x06, 0b10000000); //0x06 is register controlling pull up resistors
+
+}
+
+void setExpander(char address, char value) {
+    i2c_master_start();
+    i2c_master_send(SLAVE_ADDR << 1 | 0);
+    i2c_master_send(address);
+    i2c_master_send(value);
+    i2c_master_stop();
+}
+
+char getExpander(char address) {
+    i2c_master_start();
+    i2c_master_send(SLAVE_ADDR << 1 | 0);
+    i2c_master_send(address);
+    i2c_master_restart();
+    i2c_master_send(SLAVE_ADDR << 1 | 1);
+    char val = i2c_master_recv();
+    i2c_master_ack(1);
+    i2c_master_stop();
+    return val;
 }

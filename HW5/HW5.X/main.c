@@ -1,6 +1,7 @@
 #include <xc.h>           // processor SFR definitions
 #include <sys/attribs.h>  // __ISR macro
 #include <math.h>
+#include "i2c_master_noint.h"
 
 // DEVCFG0
 #pragma config DEBUG = OFF // no debugging
@@ -37,28 +38,6 @@
 #pragma config FUSBIDIO = ON // USB pins controlled by USB module
 #pragma config FVBUSONIO = ON // USB BUSON controlled by USB module
 
-unsigned int sinWave[100];
-unsigned int triWave[200];
-
-void makeWaves()
-{
-    int i;
-    double sinTemp;
-    double triTemp;
-    for(i=0; i < 100; i++)
-    {
-        sinTemp = 255.0/2.0 + (255.0/2.0) * sin(2*3.14 * (i/100.0));
-        sinWave[i] = sinTemp;        
-    }
-    
-    for(i=0; i < 200; i++)
-    {
-        triTemp = i*(255.0/200.0);
-        triWave[i] = triTemp;
-    }
-    
-}
-
 int main() {
 
     __builtin_disable_interrupts();
@@ -76,31 +55,15 @@ int main() {
     DDPCONbits.JTAGEN = 0;
 
     // do your TRIS and LAT commands here
-
-    initSPI1();
-    makeWaves();
+    i2c_master_setup();
+    initExpander();
     __builtin_enable_interrupts();
-    int counter1 = 0;
-    int counter2 = 0;
-    while(1) {
-        _CP0_SET_COUNT(0);
-        while(_CP0_GET_COUNT() < 48000000/2/1000) //1kHz signal
-        {
-           ;
-        }
-        setVoltage(0,sinWave[counter1]);
-        setVoltage(1,triWave[counter2]);
-        
-        counter1++;
-        counter2++;
-        if(counter1 == 100)
-        {
-            counter1 = 0;
-        }
-        
-        if(counter2 == 200)
-        {
-            counter2 = 0;
+
+    while (1) {
+        if (getExpander(0x09) >> 7) {
+            setExpander(0x0A, 1);
+        } else {
+            setExpander(0x0A, 0);
         }
     }
 }
