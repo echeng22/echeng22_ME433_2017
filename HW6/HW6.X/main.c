@@ -62,15 +62,28 @@ int main() {
     __builtin_enable_interrupts();
     char message[100];
     LCD_clearScreen(BLACK);
-    LCD_char('H',64, 64, WHITE, BLACK);
-    LCD_char('I',72, 64, WHITE, MAGENTA);
-    LCD_char('J',80, 64, WHITE, BLUE);
-    LCD_char('E',2, 1, WHITE, CYAN);
-    LCD_char('L',120,1, WHITE, YELLOW);
-    LCD_char('L',2,115, WHITE, GREEN);
-    LCD_char('O',120,120, WHITE, RED);
-    sprintf(message, "Hello World ! ");
-    LCD_string(message,10,10,WHITE, BLACK);
-    
+    int counter = 0;
+    int increment = 1;
+    double frames = 0;
+    int time = _CP0_GET_COUNT();
+    while(1)
+    {
+        while(_CP0_GET_COUNT() < time + 48000000/2)
+        {
+            sprintf(message, "Hello World! %d ", counter);
+            LCD_string(message, 28, 32, WHITE, BLACK);
+            LCD_bar(64, 50, counter/2, 1, 50, RED, BLACK);
+            if(counter == 100 || counter == -100)
+            {
+                increment*= -1;
+            }
+            counter += increment;
+            frames++;
+        }
+        sprintf(message, "FPS = %.2f", frames);
+        LCD_string(message, 28, 80, WHITE, BLACK);
+        frames = 0;
+        time = _CP0_GET_COUNT();
+    }
 }
 

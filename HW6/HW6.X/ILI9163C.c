@@ -15,6 +15,7 @@
 
 #include <xc.h>
 #include "ILI9163C.h"
+#include <math.h>
 
 void SPI1_init() {
     SDI1Rbits.SDI1R = 0b0100; // B8 is SDI1
@@ -241,11 +242,44 @@ void LCD_string(char* string, unsigned short x0, unsigned short y0, unsigned sho
 {
     int i = 0;
     int position = x0;
-    while(string[i] != '\0')
+    while(string[i] != 0)
     {
         LCD_char(string[i], position, y0, c1, c2);
         i++;
         position+=5;
     }
     
+}
+/*
+ * length can be positive or negative, a negative value would be in the negative x direction
+ * width can be positive or negative, a negative value would be in the positive y direction
+ */
+
+void LCD_bar(unsigned short x0, unsigned short y0, int length, int width, int max, unsigned short c1, unsigned short c2)
+{
+    int xDir = (length >= 0) ? 1 : -1;
+    int yDir = (width >= 0) ? 1 : -1;
+    int i, j;
+    unsigned short x , y;
+    int absLength = length * xDir;
+    int absWidth = width * yDir;
+    for(i = 0; i < absLength; i++)
+    {
+        x = x0 + i*xDir;
+        for(j = 0; j<absWidth; j++)
+        {
+            y = y0 + j*yDir;
+            LCD_drawPixel(x, y, c1);
+        }
+    }
+    
+    for(i = absLength; i < max; i++)
+    {
+        x = x0 + i*xDir;
+        for(j = 0; j<absWidth; j++)
+        {
+            y = y0 + j*yDir;
+            LCD_drawPixel(x, y, c2);
+        }
+    }
 }
