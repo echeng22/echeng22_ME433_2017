@@ -1,7 +1,8 @@
 #include <xc.h>           // processor SFR definitions
 #include <sys/attribs.h>  // __ISR macro
 #include <math.h>
-#include "i2c_master_noint.h"
+#include "ILI9163C.h"
+#include <stdio.h>
 
 // DEVCFG0
 #pragma config DEBUG = OFF // no debugging
@@ -59,9 +60,17 @@ int main() {
     LCD_init();
     
     __builtin_enable_interrupts();
-
-    while (1) {
+    char message[100];
+    LCD_clearScreen(BLACK);
+    LCD_char('H',64, 64, WHITE, BLACK);
+    LCD_char('I',72, 64, WHITE, MAGENTA);
+    LCD_char('J',80, 64, WHITE, BLUE);
+    LCD_char('E',2, 1, WHITE, CYAN);
+    LCD_char('L',120,1, WHITE, YELLOW);
+    LCD_char('L',2,115, WHITE, GREEN);
+    LCD_char('O',120,120, WHITE, RED);
+    sprintf(message, "Hello World ! ");
+    LCD_string(message,10,10,WHITE, BLACK);
     
-    }
 }
 
