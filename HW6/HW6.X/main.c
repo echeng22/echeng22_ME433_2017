@@ -64,25 +64,23 @@ int main() {
     LCD_clearScreen(BLACK);
     int counter = 0;
     int increment = 1;
-    double frames = 0;
-    int time = _CP0_GET_COUNT();
+//    double frames = 0;
+    int time;
+    
     while(1)
     {
-        while(_CP0_GET_COUNT() < time + 48000000/2)
+        time = _CP0_GET_COUNT();
+        sprintf(message, "Hello World! %d ", counter);
+        LCD_string(message, 28, 32, WHITE, BLACK);
+        LCD_bar(64, 40, counter/2, 16, 50, RED, CYAN);
+        if(counter == 100 || counter == -100)
         {
-            sprintf(message, "Hello World! %d ", counter);
-            LCD_string(message, 28, 32, WHITE, BLACK);
-            LCD_bar(64, 50, counter/2, 1, 50, RED, BLACK);
-            if(counter == 100 || counter == -100)
-            {
-                increment*= -1;
-            }
-            counter += increment;
-            frames++;
+            increment*= -1;
         }
-        sprintf(message, "FPS = %.2f", frames);
+        time = _CP0_GET_COUNT() - time;
+        counter += increment;
+        sprintf(message, "FPS = %.2f", 1.0/(time/24000000.0));
         LCD_string(message, 28, 80, WHITE, BLACK);
-        frames = 0;
         time = _CP0_GET_COUNT();
     }
 }
