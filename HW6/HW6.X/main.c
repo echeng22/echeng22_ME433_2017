@@ -72,7 +72,7 @@ int main() {
         time = _CP0_GET_COUNT();
         sprintf(message, "Hello World! %d ", counter);
         LCD_string(message, 28, 32, WHITE, BLACK);
-        LCD_bar(64, 40, counter/2, 16, 50, RED, CYAN);
+        LCD_bar(64, 40, counter/2, 8, 50, RED, CYAN);
         if(counter == 100 || counter == -100)
         {
             increment*= -1;
@@ -81,7 +81,10 @@ int main() {
         counter += increment;
         sprintf(message, "FPS = %.2f", 1.0/(time/24000000.0));
         LCD_string(message, 28, 80, WHITE, BLACK);
-        time = _CP0_GET_COUNT();
+        while(_CP0_GET_COUNT() < time + 48000000/10)
+        {
+            ;
+        }
     }
 }
 
