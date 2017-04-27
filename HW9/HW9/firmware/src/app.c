@@ -465,7 +465,7 @@ void APP_Tasks(void) {
                 {
                     if(i == 0)
                     {
-                        len = sprintf(dataOut, "Index\t|ax\t|ay\t|az\t|gx\t|gy\t|gz\t\r\n");
+                        len = sprintf(dataOut, "%s\t|%8s\t|%8s\t|%8s\t|%8s\t|%8s\t|%8s\t\r\n","Index","ax","ay","az","gx","gy","gz");
                         i++;
                     }
                     else
@@ -477,20 +477,21 @@ void APP_Tasks(void) {
                         signed short accel_x = (data[9] << 8) | data[8];
                         signed short accel_y = (data[11] << 8) | data[10];
                         signed short accel_z = (data[13] << 8) | data[12];      
-                        len = sprintf(dataOut, "%d\t|%.2f\t|%.2f\t|%.2f\t|%.2f\t|%.2f\t|%.2f\t\r\n", i, accel_x*.061/100, accel_y*.061/100, accel_z*.061/100,
+                        len = sprintf(dataOut, "%d\t|%8.2f\t|%8.2f\t|%8.2f\t|%8.2f\t|%8.2f\t|%8.2f\t\r\n", i, accel_x*.061/100, accel_y*.061/100, accel_z*.061/100,
                                 gyro_x*.035, gyro_y*.035 , gyro_z*.035);
-//                        len = sprintf(dataOut, "%d\r\n",i);
                         i++;
                     }
+                }
+                if(i == 103)
+                {
+                    i = 0;
+                    imuStart = false;
+                    len = sprintf(dataOut, "\r\n\r\n");
                 }
                 USB_DEVICE_CDC_Write(USB_DEVICE_CDC_INDEX_0,
                         &appData.writeTransferHandle, dataOut, len,
                         USB_DEVICE_CDC_TRANSFER_FLAGS_DATA_COMPLETE);
-                if(i == 101)
-                {
-                    i = 0;
-                    imuStart = false;
-                }
+                
                 startTime = _CP0_GET_COUNT();
             }
             break;
