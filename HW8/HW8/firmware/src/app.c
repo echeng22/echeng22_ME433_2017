@@ -125,6 +125,7 @@ void APP_Initialize(void) {
     LCD_init();
     i2c_master_setup();
     initExpander();
+    LCD_clearScreen(BLACK);
 
     /* TODO: Initialize your application's state machine and other
      * parameters.
