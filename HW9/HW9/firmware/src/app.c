@@ -482,7 +482,7 @@ void APP_Tasks(void) {
                         i++;
                     }
                 }
-                if(i == 103)
+                if(i == 101)
                 {
                     i = 0;
                     imuStart = false;
