@@ -17,6 +17,8 @@ for i in range(100):
     iir.append(vals[3])
     fir.append(vals[4])
 
+ser.close()
+
 plt.plot(raw, label='raw')
 plt.plot(maf, label='maf')
 plt.plot(iir, label='iir')
