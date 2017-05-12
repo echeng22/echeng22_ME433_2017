@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/freelancer/Documents/echeng22_ME433_2017/HW13/HW13/openCVLibrary/src/main/assets"/><source path="/home/freelancer/Documents/echeng22_ME433_2017/HW13/HW13/openCVLibrary/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/home/freelancer/Documents/echeng22_ME433_2017/HW13/HW13/openCVLibrary/src/debug/assets"/></dataSet></merger>
