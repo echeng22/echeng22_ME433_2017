@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
     private TextureView mTextureView;
     private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
-    private Bitmap bmp = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888);
+    private Bitmap bmp = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
     private Canvas canvas = new Canvas(bmp);
     private Paint paint1 = new Paint();
     private TextView mTextView;

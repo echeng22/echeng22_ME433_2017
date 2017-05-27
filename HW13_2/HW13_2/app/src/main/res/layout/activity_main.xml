@@ -31,13 +31,13 @@
 
         <SurfaceView
             android:id="@+id/surfaceview"
-            android:layout_width="1024px"
-            android:layout_height="800px"/>
+            android:layout_width="800px"
+            android:layout_height="600px"/>
 
         <TextureView
             android:id="@+id/textureview"
-            android:layout_width="1024px"
-            android:layout_height="800px"/>
+            android:layout_width="800px"
+            android:layout_height="600px"/>
 
     </LinearLayout>
 
