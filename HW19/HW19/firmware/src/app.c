@@ -488,16 +488,15 @@ void APP_Tasks(void) {
             if (gotRx) {
                 OC1RS = (int)(1200 * leftWheel); 
                 OC4RS = (int)(1200 * rightWheel); 
-//                if (servoAngle > 180)
-//                {
-//                    servoAngle = 180;
-//                }              
-//                else if(servoAngle < 0)
-//                {
-//                    servoAngle = 0;
-//                }
-//                OC3RS = (int)(1500 + servoAngle / .03); 
-                OC3RS = (int)(servoAngle); 
+                if (servoAngle > 180)
+                {
+                    servoAngle = 180;
+                }              
+                else if(servoAngle < 0)
+                {
+                    servoAngle = 0;
+                }
+                OC3RS = (int)(1500 + servoAngle / .03); 
                 rxPos = 0;
                 gotRx = 0;
                 memset(rx,0,64);
