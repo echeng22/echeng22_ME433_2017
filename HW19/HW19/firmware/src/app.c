@@ -75,6 +75,7 @@ int rxPos = 0; // how much data has been stored
 int gotRx = 0; // the flag
 double leftWheel= 0.5;
 double rightWheel = 0.5;
+double servoAngle = 0;
 
 // *****************************************************************************
 /* Application Data
@@ -355,6 +356,7 @@ void APP_Initialize(void) {
     OC1RS = (int)(1200 * leftWheel); 
     LATBbits.LATB3 = 0; // direction
     OC4RS = (int)(1200 * rightWheel);
+    OC3RS = 3500;
         
     startTime = _CP0_GET_COUNT();
 }
@@ -420,7 +422,7 @@ void APP_Tasks(void) {
                     if (appData.readBuffer[ii] == '\n' || appData.readBuffer[ii] == '\r')
                     {
                         rx[rxPos] = 0; // end the array
-                        sscanf(rx, "%f %f", &leftWheel, &rightWheel); // get the int out of the array
+                        sscanf(rx, "%f %f %f", &leftWheel, &rightWheel, &servoAngle); // get the int out of the array
                         gotRx = 1; // set the flag
                         break; // get out of the while loop
                     }
@@ -482,12 +484,23 @@ void APP_Tasks(void) {
             appData.isWriteComplete = false;
             appData.state = APP_STATE_WAIT_FOR_WRITE_COMPLETE;
 
-            len = sprintf(dataOut,"left: %f, right: %f\r\n",leftWheel, rightWheel);
+            len = sprintf(dataOut,"left: %f, right: %f, servo: %f\r\n", leftWheel, rightWheel, servoAngle);
             if (gotRx) {
                 OC1RS = (int)(1200 * leftWheel); 
                 OC4RS = (int)(1200 * rightWheel); 
+//                if (servoAngle > 180)
+//                {
+//                    servoAngle = 180;
+//                }              
+//                else if(servoAngle < 0)
+//                {
+//                    servoAngle = 0;
+//                }
+//                OC3RS = (int)(1500 + servoAngle / .03); 
+                OC3RS = (int)(servoAngle); 
                 rxPos = 0;
                 gotRx = 0;
+                memset(rx,0,64);
             } 
             USB_DEVICE_CDC_Write(USB_DEVICE_CDC_INDEX_0,
                         &appData.writeTransferHandle, dataOut, len,
