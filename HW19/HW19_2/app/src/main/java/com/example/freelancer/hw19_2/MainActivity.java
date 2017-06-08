@@ -75,7 +75,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
         Camera.Parameters parameters = mCamera.getParameters();
         parameters.setPreviewSize(640, 480);
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY); // no autofocusing
-        parameters.setAutoExposureLock(true); // keep the white balance constant
+        parameters.setAutoExposureLock(false); // keep the white balance constant
         mCamera.setParameters(parameters);
         mCamera.setDisplayOrientation(90); // rotate to portrait mode
 
@@ -119,7 +119,9 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
                     sum_mr = 0;
                     bmp.getPixels(pixels, 0, bmp.getWidth(), 0, j, bmp.getWidth(), 1);
                     for (int i = 0; i < bmp.getWidth(); i++) {
-                        if (((green(pixels[i]) - red(pixels[i])) > -threshold)&&((green(pixels[i]) - red(pixels[i])) < threshold)&&(green(pixels[i])  > T)) {
+                        if (((green(pixels[i]) - red(pixels[i])) > -threshold) && ((green(pixels[i]) - red(pixels[i])) < threshold) &&
+                                ((blue(pixels[i]) - red(pixels[i])) > -threshold) && ((blue(pixels[i]) - red(pixels[i])) < threshold) &&
+                                ((green(pixels[i]) - blue(pixels[i])) > -threshold)&&((green(pixels[i]) - blue(pixels[i])) < threshold) && (green(pixels[i])  > T)) {
                             pixels[i] = rgb(1, 1, 1); // set the pixel to almost 100% black
                             sum_m += green(pixels[i])+red(pixels[i])+blue(pixels[i]);
                             sum_mr += (green(pixels[i])+red(pixels[i])+blue(pixels[i]))*i;

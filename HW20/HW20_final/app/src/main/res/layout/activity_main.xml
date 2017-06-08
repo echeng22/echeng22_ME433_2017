@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.freelancer.hw20_final.MainActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="Radius"/>
+
+            <SeekBar
+                android:id="@+id/radiusBar"
+                android:max="50"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="Brightness"/>
+
+
+            <SeekBar
+                android:id="@+id/brightnessBar"
+                android:max="100"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="Max Speed"/>
+
+
+            <SeekBar
+                android:id="@+id/maxSpeed"
+                android:max="100"
+                android:progress="100"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/stop"
+                    android:text="Stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/start"
+                    android:text="Start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="left">
+                <TextView
+                    android:id="@+id/cameraStatus"
+                    android:paddingLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="no camera detected"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/speedStatus"
+                    android:paddingLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Speed"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left">
+                <TextView
+                    android:id="@+id/radiusValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Radius"
+                    android:paddingTop="10dp"
+                    android:paddingRight="100dp"
+                    android:paddingBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/maxSpeedValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Speed"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"/>
+
+            </LinearLayout>
+
+
+            <SurfaceView
+                android:id="@+id/surfaceview"
+                android:layout_width="800px"
+                android:layout_height="600px"/>
+
+            <TextureView
+                android:id="@+id/textureview"
+                android:layout_width="800px"
+                android:layout_height="600px"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>
