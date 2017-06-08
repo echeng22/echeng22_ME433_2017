@@ -60,6 +60,22 @@
                 android:paddingBottom="20dp"
                 android:paddingTop="20dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="KP"/>
+
+            <SeekBar
+                android:id="@+id/KPValue"
+                android:max="100"
+                android:progress="25"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"/>
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -121,6 +137,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Speed"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/KPText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="KP"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"/>
 

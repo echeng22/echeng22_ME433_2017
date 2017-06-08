@@ -55,6 +55,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
     private TextView radiusText;
     private TextView maxSpeedText;
     private TextView mTextView;
+    private TextView KPText;
     private SurfaceHolder mSurfaceHolder;
     private Bitmap bmp = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
     private Canvas canvas = new Canvas(bmp);
@@ -63,6 +64,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
     private SeekBar myRadius;
     private SeekBar brightBar;
     private SeekBar speedBar;
+    private SeekBar KPBar;
     private int radius = 0;
     private int brightness = 0;
     private Button stopButton;
@@ -96,6 +98,8 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
         radiusText = (TextView) findViewById(R.id.radiusValue);
         maxSpeedText = (TextView) findViewById(R.id.maxSpeedValue);
         speedBar = (SeekBar)findViewById(R.id.maxSpeed);
+        KPBar = (SeekBar)findViewById(R.id.KPValue);
+        KPText = (TextView)findViewById(R.id.KPText);
 
 
         stopButton = (Button)findViewById(R.id.stop);
@@ -104,7 +108,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
         leftWheelSpeed = 1;
         rightWheelSpeed = 1;
         servoAngle = 75;
-        KP = .5;
+        KP = .25;
 
 
         setMyControlListener();
@@ -164,6 +168,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
         int COM = 0;
         int sum_mr; // the sum of the mass times the radius
         int sum_m; // the sum of the masses
+        int height = 400;
 
         final Canvas c = mSurfaceHolder.lockCanvas();
         if (c != null) {
@@ -172,9 +177,11 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
             // in the row, see if there is more green than red
             sum_m = 0;
             sum_mr = 0;
-            bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 300, bmp.getWidth(), 1);
+            bmp.getPixels(pixels, 0, bmp.getWidth(), 0, height, bmp.getWidth(), 1);
             for (int i = 0; i < bmp.getWidth(); i++) {
-                if (((green(pixels[i]) - red(pixels[i])) > -radius) && ((green(pixels[i]) - red(pixels[i])) < radius) && (green(pixels[i]) > brightness)) {
+                if (((green(pixels[i]) - red(pixels[i])) > -radius) && ((green(pixels[i]) - red(pixels[i])) < radius) && (green(pixels[i]) > brightness) &&
+                ((blue(pixels[i]) - red(pixels[i])) > -radius) && ((blue(pixels[i]) - red(pixels[i])) < radius) && (blue(pixels[i]) > brightness) &&
+                red(pixels[i]) > brightness) {
                     pixels[i] = rgb(1, 1, 1); // set the pixel to almost 100% black
                     sum_m += green(pixels[i]) + red(pixels[i]) + blue(pixels[i]);
                     sum_mr += (green(pixels[i]) + red(pixels[i]) + blue(pixels[i])) * i;
@@ -186,9 +193,9 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
                 }
 
             }
-            bmp.setPixels(pixels, 0, bmp.getWidth(), 0, 300, bmp.getWidth(), 1);
+            bmp.setPixels(pixels, 0, bmp.getWidth(), 0, height, bmp.getWidth(), 1);
             if(COM != 0)
-                canvas.drawCircle(COM, 300, 5, paint1); // x position, y position, diameter, color
+                canvas.drawCircle(COM, height, 5, paint1); // x position, y position, diameter, color
 //                if (COM != 0) {
 //                    canvas.drawCircle(COM, j, 5, paint1); // x position, y position, diameter, color
 //                }
@@ -212,32 +219,32 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
         {
             double error = COM - 400;
             servoAngle = 75;
-            if(error > 0)
-            {
+            if(COM != 0) {
+                if (error > 0) {
 
-                leftWheelSpeed = maxSpeed;
-                rightWheelSpeed = maxSpeed - (error/400) * KP;
-                if (rightWheelSpeed < 0)
-                    rightWheelSpeed = 0;
-                servoAngle = 0;
+                    leftWheelSpeed = maxSpeed;
+                    rightWheelSpeed = maxSpeed - (error / 400) * KP;
+                    if (rightWheelSpeed < 0)
+                        rightWheelSpeed = 0;
+                    servoAngle = 0;
+                } else if (error < 0) {
+                    leftWheelSpeed = maxSpeed + (error / 400) * KP;
+                    rightWheelSpeed = maxSpeed;
+                    if (leftWheelSpeed < 0)
+                        leftWheelSpeed = 0;
+                    servoAngle = 180;
+                }
+
+                if (error > -radius * KP && error < radius * KP)
+                    servoAngle = 75;
+
+
+                String sendString = String.valueOf(leftWheelSpeed) + " " + String.valueOf(rightWheelSpeed) + " " + String.valueOf(servoAngle) + '\n';
+                try {
+                    sPort.write(sendString.getBytes(), 10); // 10 is the timeout
+                } catch (IOException e) {
+                }
             }
-            else if(error < 0)
-            {
-                leftWheelSpeed = maxSpeed + (error/400) * KP;
-                rightWheelSpeed = maxSpeed;
-                if (leftWheelSpeed < 0)
-                    leftWheelSpeed = 0;
-                servoAngle = 180;
-            }
-
-            if(error > -radius * KP && error < radius * KP )
-                servoAngle = 75;
-
-
-            String sendString = String.valueOf(leftWheelSpeed) +" "+ String.valueOf(rightWheelSpeed) +" "+ String.valueOf(servoAngle) + '\n';
-            try {
-                sPort.write(sendString.getBytes(), 10); // 10 is the timeout
-            } catch (IOException e) { }
 
         }
         else
@@ -290,6 +297,24 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 maxSpeed = progress/100.0;
                 maxSpeedText.setText("Max Speed: " + maxSpeed);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        KPBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                KP = progress/100.0;
+                KPText.setText("KP: " + KP);
             }
 
             @Override
